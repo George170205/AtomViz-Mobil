@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "AtomViz 3D",
+    "slug": "atomviz-3d",
+    "version": "1.0.0",
+    "orientation": "landscape",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#030912"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "requiresFullScreen": true,
+      "infoPlist": {
+        "NSAllowsArbitraryLoads": true,
+        "NSAllowsLocalNetworking": true
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#030912"
+      },
+      "permissions": [
+        "INTERNET"
+      ],
+      "usesCleartextTraffic": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-asset"
+    ]
+  }
+}
