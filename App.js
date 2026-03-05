@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, View, StatusBar, ActivityIndicator, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system/legacy';
+// ✅ Nueva API de expo-file-system (SDK 54+)
+import { File } from 'expo-file-system/next';
 
 export default function App() {
   const webviewRef = useRef(null);
@@ -16,9 +17,24 @@ export default function App() {
 
   async function loadHTML() {
     try {
-      const asset = Asset.fromModule(require('./assets/atomviz.html'));
-      await asset.downloadAsync();
-      const content = await FileSystem.readAsStringAsync(asset.localUri);
+      // Cargar el HTML
+      const htmlAsset = Asset.fromModule(require('./assets/atomviz.html'));
+      await htmlAsset.downloadAsync();
+      const htmlFile = new File(htmlAsset.localUri);
+      let content = await htmlFile.text();
+
+      // Cargar imagen y convertir a base64
+      const imgAsset = Asset.fromModule(require('./assets/LogoAtom_v3X2.png'));
+      await imgAsset.downloadAsync();
+      const imgFile = new File(imgAsset.localUri);
+      const base64 = await imgFile.base64();
+
+      // Reemplazar src con base64
+      content = content.replace(
+        'src="LogoAtom_v3X2.png"',
+        `src="data:image/png;base64,${base64}"`
+      );
+
       setHtmlContent(content);
       setLoading(false);
     } catch (err) {
@@ -73,7 +89,6 @@ export default function App() {
         overScrollMode="never"
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior="never"
-
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           console.warn('WebView error: ', nativeEvent);
